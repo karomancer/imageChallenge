@@ -1,8 +1,17 @@
 <html>
     <header>
+        <script src="js/util.js"></script>
         <script src="js/GoogleImageService.js"></script>
     </header>
     <body>
-        <button onclick="GoogleImageService.initialize()">Load</button>
+        <button onclick="queryImages()">Load</button>
     </body>
+    <script>
+        const gis = new GoogleImageService();
+        function queryImages() {
+            gis.query('Jack Conte').then((response) => {
+                console.log(response);
+            });
+        }
+    </script>
 </html>
