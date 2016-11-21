@@ -2,15 +2,24 @@
     <header>
         <script src="js/util.js"></script>
         <script src="js/GoogleImageService.js"></script>
+        <script src="js/ImageGrid.js"></script>
     </header>
     <body>
         <button onclick="queryImages()">Load</button>
+        <div id="image_container"></div>
     </body>
     <script>
         const gis = new GoogleImageService();
+        const grid = new ImageGrid(document.getElementById('image_container'));
+
+        // Initial loading screen
+        gis.query('Jack Conte').then((response) => {
+            grid.render(response.items)
+        });
+
         function queryImages() {
             gis.query('Jack Conte').then((response) => {
-                console.log(response);
+                grid.render(response.items)
             });
         }
     </script>

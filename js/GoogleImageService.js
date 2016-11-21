@@ -14,32 +14,6 @@ class GoogleImageService {
         this.dataset = null;
     }
 
-    _cleanData(q, response) {
-        if (typeof (response) == 'string') {
-            response = JSON.parse(response);
-        }
-
-        // Make the data Google responds with a little cleaner for UI use
-        const newResponse = extendObject({
-            q: q,
-            items: [],
-        }, response.searchInformation, [
-            'searchTime',
-            'totalResults',
-        ]);
-
-        response.items.map(item => {
-            newResponse.items.push(extendObject({}, item, [
-                'title',
-                'displayLink',
-                'mime',
-                'image',
-            ]));
-        });
-
-        return newResponse;
-    }
-
     query(q) {
         // If someone tries to query the exact same thing again,
         // don't search again. That's just silly.
@@ -93,5 +67,31 @@ class GoogleImageService {
 
             request.send();
         });
+    }
+
+    _cleanData(q, response) {
+        if (typeof (response) == 'string') {
+            response = JSON.parse(response);
+        }
+
+        // Make the data Google responds with a little cleaner for UI use
+        const newResponse = extendObject({
+            q: q,
+            items: [],
+        }, response.searchInformation, [
+            'searchTime',
+            'totalResults',
+        ]);
+
+        response.items.map(item => {
+            newResponse.items.push(extendObject({}, item, [
+                'title',
+                'displayLink',
+                'mime',
+                'image',
+            ]));
+        });
+
+        return newResponse;
     }
 };
