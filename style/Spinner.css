@@ -1,0 +1,48 @@
+.Spinner {
+    position: relative;
+    margin-top: 40px;
+}
+
+.Spinner img {
+    border-radius: 50%;
+    margin: 0 auto;
+    display: block;
+    -webkit-animation: loading-circle 2s infinite; /* Safari 4+ */
+    -moz-animation:    loading-circle 2s infinite; /* Fx 5+ */
+    -o-animation:      loading-circle 2s infinite; /* Opera 12+ */
+    animation:         loading-circle 2s infinite;
+}
+
+.Spinner span {
+    display: block;
+    color: white;
+    text-align: center;
+    position: absolute;
+    left: 60%;
+    bottom: 40px;
+    font-size: 20px;
+    background-color: #e6461a;
+    padding: 8px;
+}
+
+/* Preferably in Sass or LESS land, we'd make a cross-browser mixin for this... */
+@-webkit-keyframes loading-circle {
+  0%   { border: 20px solid #e6461a; }
+  75% { border: 5px solid #eaeaea; }
+  100%   { border: 20px solid #e6461a; }
+}
+@-moz-keyframes loading-circle {
+  0%   { border: 20px solid #e6461a; }
+  75% { border: 5px solid #eaeaea; }
+  100%   { border: 20px solid #e6461a; }
+}
+@-o-keyframes loading-circle {
+  0%   { border: 20px solid #e6461a; }
+  75% { border: 5px solid #eaeaea; }
+  100%   { border: 20px solid #e6461a; }
+}
+@keyframes loading-circle {
+  0%   { border: 20px solid #e6461a; }
+  75% { border: 5px solid #eaeaea; }
+  100%   { border: 20px solid #e6461a; }
+}

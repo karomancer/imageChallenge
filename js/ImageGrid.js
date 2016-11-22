@@ -1,5 +1,3 @@
-const WIDTH = 200;
-
 class ImageGrid {
     // Takes in the html element it should render inside of and an instance of GoogleImageService
     // This probably won't change, hence why it's in the constructor
@@ -8,6 +6,8 @@ class ImageGrid {
         this.container = el;
         this.items = [];
 
+        this.spinner = new Spinner(el);
+
         // Index of current image in lightbox
         this.idx = 0;
         this.imageGrid = this._createImageGrid();
@@ -15,10 +15,10 @@ class ImageGrid {
     }
 
     loading() {
-        this.container.removeChild(this.imageGrid);
-        // I'm pretty sure this removes all references to children,
-        // but I'm not 100% certain. 'removeChild' only removes from DOM
-        this._createImageGrid();
+        this.spinner.start();
+        if (this.container.contains(this.imageGrid)) {
+            this.container.removeChild(this.imageGrid);
+        }
     }
 
     openLightbox(item) {
@@ -57,8 +57,12 @@ class ImageGrid {
         const item = this.items[idx];
         const img = this.lightBox.getElementsByClassName('ImageGrid-lightbox-image')[0];
         const p = this.lightBox.getElementsByTagName('p')[0];
-        img.src = item.image.thumbnailLink;
-        p.innerText = '"' + item.title + '"';
+        const a = this.lightBox.getElementsByTagName('a')[0];
+        img.src = item.link || item.image.thumbnailLink;
+        p.innerHTML = item.htmlTitle || item.title;
+        a.innerText = item.image.contextLink;
+        a.href = item.image.contextLink;
+        a.target = '_blank';
         this.idx = idx;
 
         const backArrow = this.lightBox.getElementsByClassName('back')[0];
@@ -74,20 +78,24 @@ class ImageGrid {
     // [title <str>, displayLink <str>, mime <str>, image <obj>]
     render(items) {
         this.items = items;
-        items.map(item => this.imageGrid.appendChild(this._createImage(item, WIDTH)));
+        this.imageGrid = this._createImageGrid();
+        items.map(item => this.imageGrid.appendChild(this._createImage(item)));
         this.container.appendChild(this.imageGrid);
+        this.spinner.stop();
     }
 
-    _createImage(item, width) {
+    _createImage(item) {
         const imgContainer = document.createElement('div');
         imgContainer.className = 'ImageGrid-thumbnail';
 
         const img = document.createElement('img');
         img.src = item.image.thumbnailLink;
-        img.addEventListener('click', this.openLightbox.bind(this, item));
-        if (width) {
-            img.width = width;
+        if (item.image.thumbnailWidth) {
+            img.width = item.image.thumbnailWidth;
         }
+
+        img.height = item.image.thumbnailHeight ? item.image.thumbnailHeight : 120;
+        img.addEventListener('click', this.openLightbox.bind(this, item));
 
         imgContainer.appendChild(img);
         return imgContainer;
@@ -119,12 +127,16 @@ class ImageGrid {
 
         const img = document.createElement('img');
         const p = document.createElement('p');
+        const a = document.createElement('a');
+        const exit = document.createElement('span');
+        exit.innerHTML = '&#215;'; // TODO: actually get an X glyph
+        exit.className = 'ImageGrid-lightbox-exit';
+        exit.addEventListener('click', this.closeLightbox.bind(this));
         img.className = 'ImageGrid-lightbox-image';
 
         const imgContainer = document.createElement('div');
         imgContainer.className = 'ImageGrid-lightbox-image-container';
-        imgContainer.appendChild(img);
-        imgContainer.appendChild(p);
+        [exit, img, p, a].map(i => imgContainer.appendChild(i));
 
         document.addEventListener('keyup', () => {
             // Only check for key events while lightbox is open

@@ -7,7 +7,6 @@ const PARAMS = {
     cx: CX,
     key: KEY,
     searchType: 'image',
-    num: 25,
 };
 
 class GoogleImageService {
@@ -75,18 +74,22 @@ class GoogleImageService {
             response = JSON.parse(response);
         }
 
+        console.log(response)
+
         // Make the data Google responds with a little cleaner for UI use
         const newResponse = extendObject({
             q: q,
             items: [],
         }, response.searchInformation, [
-            'searchTime',
+            'formattedSearchTime',
             'totalResults',
         ]);
 
         response.items.map(item => {
             newResponse.items.push(extendObject({}, item, [
                 'title',
+                'htmlTitle',
+                'link',
                 'displayLink',
                 'mime',
                 'image',

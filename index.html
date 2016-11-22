@@ -3,15 +3,17 @@
         <script src="js/util.js"></script>
         <script src="js/GoogleImageService.js"></script>
         <script src="js/ImageGrid.js"></script>
+        <script src="js/Spinner.js"></script>
         <link rel="stylesheet" type="text/css" href="style/base.css">
         <link rel="stylesheet" type="text/css" href="style/ImageGrid.css">
+        <link rel="stylesheet" type="text/css" href="style/Spinner.css">
     </head>
     <header>
         <div class="header-content">
             <h4>patreon image challenge</h4>
             <form onsubmit="queryImages()">
                 <!-- Was going to do a type="search", but honestly it doesn't add much other than screen reader accessibility, while taking away a lot of styling options -->
-                <input name="search-box" type="text" value="Jack Conte" />
+                <input name="search-box" type="text" placeholder="Jack Conte" />
                 <button>Find images</button>
             </form>
         </div>
@@ -19,52 +21,81 @@
     <body>
         <div class="content">
             <div class="search-results">
-                <h2 id="search_term">Jack Conte</h2>
+                <div class="search-header">
+                    <h2 id="search_term"></h2>
+                    <p id="search_meta_data"></p>
+                </div>
+                <div id="image_container"></div>
             </div>
-            <div id="image_container"></div>
+            <div class="info-box">
+                <h3>About this challenge</h3>
+                <p>
+                    This image search challenge was built using native JavaScript with ECMAScript 6 syntax and CSS3. It uses the <a href="https://developers.google.com/custom-search/json-api/v1/reference/cse/list">Google Custom Search API</a>, while specifying for only images with a custom search preference for images found on <a href="http://www.patreon.com/">www.patreon.com</a>.<br /><br />
+                    The API has a maximum number of searches of 25 per day on a free account, so if it runs out, I have a pre-selected set of hard-coded images to still test UI functionality. The free API also limits searches for up to 10 results at a time.<br /><br />
+                    The code for this project can be found at <a href="https://github.com/karomancer/imageChallenge">karomancer/imageChallenge</a>.<br /><br />
+                    <b>V2 considerations:</b>
+                    <ul>
+                        <li>Pagination support</li>
+                        <li>Improve lightbox animation</li>
+                        <li>Organize stylesheets and code into smaller modules</li>
+                        <li>Clean HTML up to use fewer IDs and tag references</li>
+                    </ul>
+                </p>
+            </div>
         </div>
     </body>
     <script>
+        const searchTerm = document.getElementById('search_term');
+        const searchMetadata = document.getElementById('search_meta_data');
         const gis = new GoogleImageService();
         const grid = new ImageGrid(document.getElementById('image_container'), gis);
 
-        const IMAGES = [{
-                title: 'Bunny rolling over',
-                image: {
-                    thumbnailLink: 'http://static.boredpanda.com/blog/wp-content/uploads/2015/09/cute-bunnies-25__605.jpg'
-                }
-            }, {
-                title: 'Bunny clapping',
-                image: {
-                    thumbnailLink: 'http://4.bp.blogspot.com/-HTvSYzA-pO4/UgQb4Zh_u0I/AAAAAAAAEuI/XwhtogT_1tA/s1600/3+cute2.jpg'
-                }
-            }, {
-                title: 'Bunny bad advice',
-                image: {
-                    thumbnailLink: 'http://i.huffpost.com/gen/1170610/images/o-BUNNIES-BAD-ADVICE-facebook.jpg'
-                }
-            }, {
-                title: 'Lionhead buns',
-                image: {
-                    thumbnailLink: 'http://www.warrenphotographic.co.uk/photography/bigs/26687-Two-baby-Lionhead-cross-bunnies-wearing-bells-white-background.jpg'
-                }
-            },
-        ];
+        // const BACKUP_IMAGES = [{
+        //         title: 'Bunny rolling over',
+        //         image: {
+        //             contextLink: 'http://boredpanda.com/',
+        //             thumbnailLink: 'http://static.boredpanda.com/blog/wp-content/uploads/2015/09/cute-bunnies-25__605.jpg'
+        //         }
+        //     }, {
+        //         title: 'Bunny clapping',
+        //         image: {
+        //             contextLink: 'http://blogspot.com/',
+        //             thumbnailLink: 'http://4.bp.blogspot.com/-HTvSYzA-pO4/UgQb4Zh_u0I/AAAAAAAAEuI/XwhtogT_1tA/s1600/3+cute2.jpg'
+        //         }
+        //     }, {
+        //         title: 'Bunny bad advice',
+        //         image: {
+        //             contextLink: 'http://huffpost.com',
+        //             thumbnailLink: 'http://i.huffpost.com/gen/1170610/images/o-BUNNIES-BAD-ADVICE-facebook.jpg'
+        //         }
+        //     }, {
+        //         title: 'Lionhead buns',
+        //         image: {
+        //             contextLink: 'http://warrenphotographic.co.uk',
+        //             thumbnailLink: 'http://www.warrenphotographic.co.uk/photography/bigs/26687-Two-baby-Lionhead-cross-bunnies-wearing-bells-white-background.jpg'
+        //         }
+        //     },
+        // ];
 
-        grid.render(IMAGES);
+        // grid.render(BACKUP_IMAGES);
 
         // Initial loading screen
-        // gis.query('Jack Conte').then((response) => {
-        //     grid.render(response.items)
-        // });
+        grid.loading();
+        gis.query('Jack Conte').then((response) => {
+            grid.render(response.items);
+            searchTerm.innerText = 'Jack Conte';
+            searchMetadata.innerHTML = `${response.formattedSearchTime}s &mdash; ${response.totalResults} results`;
+        });
 
-        // function queryImages() {
-        //     event.preventDefault();
-        //     const searchBox = event.target.elements.namedItem('search-box');
-        //     grid.loading();
-        //     gis.query(searchBox.value).then((response) => {
-        //         grid.render(response.items)
-        //     });
-        // }
+        function queryImages() {
+            event.preventDefault();
+            const searchBox = event.target.elements.namedItem('search-box');
+            grid.loading();
+            gis.query(searchBox.value).then((response) => {
+                grid.render(response.items)
+                searchTerm.innerText = searchBox.value;
+                searchMetadata.innerHTML = `${response.formattedSearchTime}s &mdash; ${response.totalResults} results`;
+            });
+        }
     </script>
 </html>
