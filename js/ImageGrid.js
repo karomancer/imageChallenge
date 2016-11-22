@@ -15,6 +15,7 @@ class ImageGrid {
     }
 
     loading() {
+        // TODO: loading for individual images too.
         this.spinner.start();
         if (this.container.contains(this.imageGrid)) {
             this.container.removeChild(this.imageGrid);

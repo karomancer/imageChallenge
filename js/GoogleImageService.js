@@ -9,6 +9,34 @@ const PARAMS = {
     searchType: 'image',
 };
 
+// Needed for if API blows up on you
+const BACKUP_IMAGES = [{
+        title: 'Bunny rolling over',
+        image: {
+            contextLink: 'http://boredpanda.com/',
+            thumbnailLink: 'http://static.boredpanda.com/blog/wp-content/uploads/2015/09/cute-bunnies-25__605.jpg'
+        }
+    }, {
+        title: 'Bunny clapping',
+        image: {
+            contextLink: 'http://blogspot.com/',
+            thumbnailLink: 'http://4.bp.blogspot.com/-HTvSYzA-pO4/UgQb4Zh_u0I/AAAAAAAAEuI/XwhtogT_1tA/s1600/3+cute2.jpg'
+        }
+    }, {
+        title: 'Bunny bad advice',
+        image: {
+            contextLink: 'http://huffpost.com',
+            thumbnailLink: 'http://i.huffpost.com/gen/1170610/images/o-BUNNIES-BAD-ADVICE-facebook.jpg'
+        }
+    }, {
+        title: 'Lionhead buns',
+        image: {
+            contextLink: 'http://warrenphotographic.co.uk',
+            thumbnailLink: 'http://www.warrenphotographic.co.uk/photography/bigs/26687-Two-baby-Lionhead-cross-bunnies-wearing-bells-white-background.jpg'
+        }
+    },
+];
+
 class GoogleImageService {
     constructor() {
         this.dataset = null;
@@ -70,11 +98,18 @@ class GoogleImageService {
     }
 
     _cleanData(q, response) {
+        if (response.match('dailyLimitExceeded')) {
+            return {
+                q: q,
+                items: BACKUP_IMAGES,
+                formattedSearchTime: '0.2',
+                totalResults: '4',
+            };
+        };
+
         if (typeof (response) == 'string') {
             response = JSON.parse(response);
         }
-
-        console.log(response)
 
         // Make the data Google responds with a little cleaner for UI use
         const newResponse = extendObject({
