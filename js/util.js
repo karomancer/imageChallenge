@@ -9,6 +9,9 @@ function formatParams(params) {
 // Note: The second provided object overwrites fields in the first.
 // Also takes a whitelist if you only want to combine certain fields from object 2.
 function extendObject(obj, extraObj, fieldWhitelist) {
+    // Also could have added this to the object prototype,
+    // to be used like Object.extend(extraObj),
+    // but I find that to be pretty dicey
     const newObj = {};
     Object.keys(obj).map(key => { newObj[key] = obj[key]; });
     Object.keys(extraObj).map(key => {
@@ -17,3 +20,4 @@ function extendObject(obj, extraObj, fieldWhitelist) {
     });
     return newObj;
 }
+

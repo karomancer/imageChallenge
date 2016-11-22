@@ -7,6 +7,7 @@ const PARAMS = {
     cx: CX,
     key: KEY,
     searchType: 'image',
+    num: 25,
 };
 
 class GoogleImageService {

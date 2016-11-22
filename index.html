@@ -1,26 +1,70 @@
 <html>
-    <header>
+    <head>
         <script src="js/util.js"></script>
         <script src="js/GoogleImageService.js"></script>
         <script src="js/ImageGrid.js"></script>
+        <link rel="stylesheet" type="text/css" href="style/base.css">
+        <link rel="stylesheet" type="text/css" href="style/ImageGrid.css">
+    </head>
+    <header>
+        <div class="header-content">
+            <h4>patreon image challenge</h4>
+            <form onsubmit="queryImages()">
+                <!-- Was going to do a type="search", but honestly it doesn't add much other than screen reader accessibility, while taking away a lot of styling options -->
+                <input name="search-box" type="text" value="Jack Conte" />
+                <button>Find images</button>
+            </form>
+        </div>
     </header>
     <body>
-        <button onclick="queryImages()">Load</button>
-        <div id="image_container"></div>
+        <div class="content">
+            <div class="search-results">
+                <h2 id="search_term">Jack Conte</h2>
+            </div>
+            <div id="image_container"></div>
+        </div>
     </body>
     <script>
         const gis = new GoogleImageService();
-        const grid = new ImageGrid(document.getElementById('image_container'));
+        const grid = new ImageGrid(document.getElementById('image_container'), gis);
+
+        const IMAGES = [{
+                title: 'Bunny rolling over',
+                image: {
+                    thumbnailLink: 'http://static.boredpanda.com/blog/wp-content/uploads/2015/09/cute-bunnies-25__605.jpg'
+                }
+            }, {
+                title: 'Bunny clapping',
+                image: {
+                    thumbnailLink: 'http://4.bp.blogspot.com/-HTvSYzA-pO4/UgQb4Zh_u0I/AAAAAAAAEuI/XwhtogT_1tA/s1600/3+cute2.jpg'
+                }
+            }, {
+                title: 'Bunny bad advice',
+                image: {
+                    thumbnailLink: 'http://i.huffpost.com/gen/1170610/images/o-BUNNIES-BAD-ADVICE-facebook.jpg'
+                }
+            }, {
+                title: 'Lionhead buns',
+                image: {
+                    thumbnailLink: 'http://www.warrenphotographic.co.uk/photography/bigs/26687-Two-baby-Lionhead-cross-bunnies-wearing-bells-white-background.jpg'
+                }
+            },
+        ];
+
+        grid.render(IMAGES);
 
         // Initial loading screen
-        gis.query('Jack Conte').then((response) => {
-            grid.render(response.items)
-        });
+        // gis.query('Jack Conte').then((response) => {
+        //     grid.render(response.items)
+        // });
 
-        function queryImages() {
-            gis.query('Jack Conte').then((response) => {
-                grid.render(response.items)
-            });
-        }
+        // function queryImages() {
+        //     event.preventDefault();
+        //     const searchBox = event.target.elements.namedItem('search-box');
+        //     grid.loading();
+        //     gis.query(searchBox.value).then((response) => {
+        //         grid.render(response.items)
+        //     });
+        // }
     </script>
 </html>

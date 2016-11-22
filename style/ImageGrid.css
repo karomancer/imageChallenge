@@ -1,0 +1,111 @@
+.ImageGrid {
+    padding: 1rem;
+
+}
+
+.ImageGrid-thumbnail {
+    transition: all 0.2s ease-in;
+    background-color: #ffffff;
+    border: 1px solid #e8eced;
+    border-radius: 3px;
+    float: left;
+    margin: 0.25rem;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.ImageGrid-thumbnail img {
+    transition: all 0.2s ease-in;
+    filter: grayscale(20%);
+    border-radius: 3px;
+}
+
+.ImageGrid-thumbnail img:hover {
+    filter: grayscale(0) brightness(120%);
+}
+
+.ImageGrid-lightbox {
+    position: fixed;
+    align-items: center;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ImageGrid-lightbox-backdrop {
+    z-index: -1;
+    transition: all 0.4s ease-in;
+    position: absolute;
+    filter: opacity(0);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 20, 0.5);
+}
+
+.ImageGrid-lightbox.open .ImageGrid-lightbox-backdrop {
+    filter: opacity(1);
+}
+
+.ImageGrid-lightbox-image-container {
+    transition: all 0.2s ease-in;
+    flex: 50%;
+    opacity: 0;
+    text-align: center;
+    vertical-align: middle;
+    width: 0;
+    height: 0;
+    margin: 0 auto;
+}
+
+.ImageGrid-lightbox.open .ImageGrid-lightbox-image-container {
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+    max-width: 75%;
+    max-height: 75%;
+    /* to accommodate for header */
+    margin-top: -40px;
+    color: white;
+}
+
+.ImageGrid-lightbox-arrow {
+    transition: opacity 0.2s;
+    flex: 25%;
+    opacity: 0;
+    width: 50px;
+    height: 50px;
+}
+
+.ImageGrid-lightbox.open .ImageGrid-lightbox-arrow {
+    opacity: 0.5;
+    cursor: pointer;
+    position: absolute;
+}
+
+.ImageGrid-lightbox.open .ImageGrid-lightbox-arrow:hover {
+    opacity: 1;
+}
+
+.ImageGrid-lightbox-image {
+    height: 100%;
+    background: white;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px #ccc;
+    margin: 0 auto;
+}
+
+.ImageGrid-lightbox-arrow.back {
+    left: 40px;
+}
+
+.ImageGrid-lightbox-arrow.hide {
+    display: none;
+}
+
+.ImageGrid-lightbox-arrow.forward {
+    right: 40px;
+}
