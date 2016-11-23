@@ -1,5 +1,6 @@
 // It would be more preferable to hide these server-side so people can't just
 // willy-nilly inspect Page Source and kidnap them. That would be a liability.
+// But I guess for the purpose of this challenge, it'll just sit here
 const KEY = 'AIzaSyAbN5opB6x2HVmfXP5E10SEVjN7K9yZQO0';
 const CX = '011476009962251898743:ulicglunr7o';
 const ORIGIN = 'https://www.googleapis.com/customsearch/v1'
