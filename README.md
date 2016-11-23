@@ -14,6 +14,7 @@ The API has a maximum number of searches of 25 per day on a free account, so if 
 - Clean HTML up to use fewer IDs and tag references
 - Loading for individual images, too
 - Obviously, hide the custom search key somewhere on a server...
+- Better error handling; I only throw errors now, but someday it would be nice to do something with that
 
 
 ## Takeaways
