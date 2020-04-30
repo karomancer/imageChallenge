@@ -56,6 +56,7 @@ class GoogleImageService {
             q: q,
         });
         const url = ORIGIN + formatParams(newParams);
+
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
 
@@ -73,7 +74,6 @@ class GoogleImageService {
             if (!request) {
                 throw new Error('I can\'t even do this.');
             }
-            request.setRequestHeader('Access-Control-Allow-Origin', ORIGIN);
             request.onload = () => {
                 const status = request.status;
                 if (status >= 200 && status < 300) {
